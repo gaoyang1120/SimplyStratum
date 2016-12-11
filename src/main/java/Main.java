@@ -15,11 +15,15 @@ public class Main {
                 shutdown();
                 break;
             }else{
-                execute(s1);
+                String[] s2 = s1.split(" ");
+                for(int i=0;i<s2.length;i++){
+                    s2[i] = s2[i].replace("\\t"," ");
+                }
+                execute(s2);
             }
         }
     }
-    public static void execute(String command){
+    public static void execute(String[] command){
         Commands.parse(command);
     }
     public static void shutdown(){
