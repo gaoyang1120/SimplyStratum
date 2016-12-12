@@ -1,19 +1,18 @@
 package com.ileonidze.stratumCore;
 
-import com.ileonidze.stratumIndicators.Indicator;
 import com.ileonidze.stratumIndicators.IndicatorsCollection;
 
 import java.util.Date;
 import java.util.HashMap;
 
 public class DatabaseItem implements Comparable {
-    private double value;
+    private double price;
     private Date date;
     private HashMap<String,Double> indicators = new HashMap<>();
 
     public DatabaseItem(CSVItem item, int index){
         this.date = item.getDate();
-        this.value = item.getClose();
+        this.price = item.getClose();
         for(int i =0;i<IndicatorsCollection.getCollection().size();i++){
             indicators.put(IndicatorsCollection.getCollection().get(i).name,IndicatorsCollection.getCollection().get(i).proceed(index,this));
         }
@@ -22,15 +21,15 @@ public class DatabaseItem implements Comparable {
         DatabaseItem item = (DatabaseItem) anotherItem;
         return this.date.compareTo(item.getDate());
     }
-    public double getValue() {
-        return value;
+    public double getPrice() {
+        return price;
     }
     public Date getDate() {
         return date;
     }
     @Override
     public String toString() {
-        return "["+date+" ("+date.getTime()/1000+"):"+value+"]";
+        return "["+date+" ("+date.getTime()/1000+"):"+ price +"]";
     }
     public HashMap<String, Double> getIndicators() {
         return indicators;

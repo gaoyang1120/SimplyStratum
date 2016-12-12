@@ -92,15 +92,15 @@ public class Database {
     }
     public static DatabaseItem getItem(SearchConditions conditions){
         if(conditions.getIndex()!=null){
-            //console.debug("Searching via index, recognized as "+(data.length+conditions.getIndex()-1));
+            int realIndex = conditions.getIndex()*conditions.getTimeFrame();
             if(data==null) {
                 console.warn("Database is empty!");
                 return null;
-            }else if(Math.abs(conditions.getIndex())>data.length-1){
+            }else if(Math.abs(realIndex)>data.length-1){
                 console.warn("Out of collection");
                 return null;
             }else{
-                return data[conditions.getIndex()<0 ? (data.length+conditions.getIndex()-1) : conditions.getIndex()];
+                return data[realIndex<0 ? (data.length+realIndex) : realIndex];
             }
         }
         return null;

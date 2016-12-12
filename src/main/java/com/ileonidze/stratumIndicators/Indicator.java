@@ -8,6 +8,6 @@ public abstract class Indicator {
     public final String name = this.getClass().getSimpleName();
     public double proceed(int index, DatabaseItem item){
         DatabaseItem foundCondition = Database.getItem(new SearchConditions().setIndex(index));
-        return foundCondition == null ? item.getValue() : foundCondition.getValue();
+        return foundCondition == null ? item.getPrice() : foundCondition.getPrice();
     };
 }

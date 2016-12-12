@@ -51,16 +51,16 @@ public class Commands {
                 }
                 break;
             case "getItem":
-                if(command.length<2){
-                    console.error("Incorrect index specified");
+                if(command.length<3){
+                    console.error("Index or timeFrame are not specified");
                 }else{
-                    DatabaseItem queryResult = Database.getItem(new SearchConditions().setIndex(Integer.parseInt(command[1])));
+                    DatabaseItem queryResult = Database.getItem(new SearchConditions().setIndex(Integer.parseInt(command[1])).setTimeFrame(Integer.parseInt(command[2])));
                     console.info(queryResult == null ? "Not found" : queryResult);
                 }
                 break;
             case "getIndicator":
                 if(command.length<3){
-                    console.error("Index or indicator's name is not specified");
+                    console.error("Index or indicator's name are not specified");
                 }else{
                     DatabaseItem queryResult = Database.getItem(new SearchConditions().setIndex(Integer.parseInt(command[1])));
                     if(queryResult == null){
