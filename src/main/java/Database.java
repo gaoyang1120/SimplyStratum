@@ -9,10 +9,8 @@ public class Database {
     public static boolean load(String dirPath){
         if(data != null) return false;
         long startTime = new Date().getTime();
-        int succeededFiles = 0;
         int pushedItems = 0;
         int totalItems = 0;
-        long totalTime = 0;
         File databaseDirectoryObject = new File(dirPath);
         File[] directoryList = databaseDirectoryObject.listFiles();
         if(directoryList==null || directoryList.length == 0){
@@ -53,7 +51,6 @@ public class Database {
                 }
                 long proceedingTimeDifference = (new Date().getTime()-startTime);
                 console.trace("Pushed "+pushedItems+" items from "+totalItems+" (over "+Math.floor(pushedItems/totalItems*1000)/10+"%) for "+proceedingTimeDifference+"ms");
-                succeededFiles++;
             }
         }
         long proceedingTimeDifference = (new Date().getTime()-startTime);
