@@ -1,11 +1,14 @@
 import org.apache.log4j.Logger;
 
 import java.io.*;
+import java.util.Arrays;
 import java.util.Date;
 
 public class Database {
     private final static Logger console = Logger.getLogger(Main.class);
     private static DatabaseItem[] data = null;
+    private static boolean sortable = true;
+
     public static boolean load(String dirPath){
         if(data != null) return false;
         long startTime = new Date().getTime();
@@ -53,6 +56,7 @@ public class Database {
                 console.trace("Pushed "+pushedItems+" items from "+totalItems+" (over "+Math.floor(pushedItems/totalItems*1000)/10+"%) for "+proceedingTimeDifference+"ms");
             }
         }
+        if(sortable) Arrays.sort(data);
         long proceedingTimeDifference = (new Date().getTime()-startTime);
         console.trace("Totally pushed "+pushedItems+" items from "+totalItems+" (over "+Math.floor(pushedItems/totalItems*1000)/10+"%) for "+proceedingTimeDifference+"ms");
         return true;
@@ -68,5 +72,10 @@ public class Database {
     }
     public static boolean reload(String dirPath){
         return unload() && load(dirPath);
+    }
+    public static boolean setSortable(String setString){
+        if(!setString.equals("1")&&!setString.equals("0")&&!setString.equals("true")&&!setString.equals("false")&&!setString.equals("+")&&!setString.equals("-")&&!setString.equals("yes")&&!setString.equals("no")) return false;
+        sortable = (setString.equals("1")||setString.equals("+")||setString.equals("true")||setString.equals("yes"));
+        return true;
     }
 }

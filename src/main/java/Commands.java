@@ -36,6 +36,13 @@ public class Commands {
                 console.debug("Unloading...");
                 printConsoleResult(Database.unload());
                 break;
+            case "setSortable":
+                if(command.length<2){
+                    console.error("Incorrect set value specified");
+                }else{
+                    printConsoleResult(Database.setSortable(command[1]));
+                }
+                break;
             default:
                 console.debug("Unknown command");
         }
