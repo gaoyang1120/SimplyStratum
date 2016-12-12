@@ -6,8 +6,8 @@ import com.ileonidze.stratumCore.SearchConditions;
 
 public abstract class Indicator {
     public final String name = this.getClass().getSimpleName();
-    public double proceed(int index, DatabaseItem item){
-        DatabaseItem foundCondition = Database.getItem(new SearchConditions().setIndex(index));
+    public double proceed(int index, int timeFrame, int period, DatabaseItem item){
+        DatabaseItem foundCondition = Database.getItem(new SearchConditions().setIndex(index).setTimeFrame(timeFrame));
         return foundCondition == null ? item.getPrice() : foundCondition.getPrice();
-    };
+    }
 }

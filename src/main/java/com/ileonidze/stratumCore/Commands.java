@@ -1,5 +1,7 @@
 package com.ileonidze.stratumCore;
 
+import com.ileonidze.stratumIndicators.Indicator;
+import com.ileonidze.stratumIndicators.IndicatorsCollection;
 import org.apache.log4j.Logger;
 
 public class Commands {
@@ -59,16 +61,21 @@ public class Commands {
                 }
                 break;
             case "getIndicator":
-                if(command.length<3){
-                    console.error("Index or indicator's name are not specified");
+                if(command.length<5){
+                    console.error("Index, timeFrame, period or indicator's name are not specified");
                 }else{
-                    DatabaseItem queryResult = Database.getItem(new SearchConditions().setIndex(Integer.parseInt(command[1])));
+                    DatabaseItem queryResult = Database.getItem(new SearchConditions().setIndex(Integer.parseInt(command[1])).setTimeFrame(Integer.parseInt(command[2])));
                     if(queryResult == null){
                         console.info("Record not found");
                         break;
                     }
-                    Double indicatorValue = queryResult.getIndicators().get(command[2]);
-                    console.info(indicatorValue == null ? "Indicator not found" : indicatorValue);
+                    Indicator indicator = IndicatorsCollection.getIndicator(command[4]);
+                    if(indicator == null){
+                        console.info("Indicator not found");
+                        break;
+                    }
+                    Double indicatorValue = indicator.proceed(Integer.parseInt(command[1]),Integer.parseInt(command[2]),Integer.parseInt(command[3]),queryResult);
+                    console.info(indicatorValue);
                 }
                 break;
             case "getSize":

@@ -1,14 +1,16 @@
 package com.ileonidze.stratumIndicators;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
 
 public class IndicatorsCollection {
-    private static final List<Indicator> collection = new ArrayList<>();
+    private static final HashMap<String,Indicator> collection = new HashMap<>();
     static {
-        collection.add(new RSI());
+        collection.put("RSI",new RSI());
     }
-    public static List<Indicator> getCollection() {
+    public static HashMap<String,Indicator> getCollection() {
         return collection;
+    }
+    public static Indicator getIndicator(String key) {
+        return collection.get(key);
     }
 }
