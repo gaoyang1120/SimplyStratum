@@ -2,8 +2,6 @@ package com.ileonidze.stratumCore;
 
 import org.apache.log4j.Logger;
 
-import javax.xml.crypto.Data;
-
 public class Commands {
     private final static Logger console = Logger.getLogger(Commands.class);
     public static void parse(String[] command){
