@@ -7,9 +7,6 @@ public class Commands {
             case "whoami":
                 console.debug("SimplyStratum");
                 break;
-            case "load":
-                console.debug("Loading data");
-                break;
             case "help":
                 console.debug("Commands supported:"
                 +"\nwhoami"
@@ -19,9 +16,27 @@ public class Commands {
                 +"\nunload"
                 +"");
                 break;
-
+            case "reload":
+                console.debug("Reloading...");
+                printConsoleResult(Database.reload());
+                break;
+            case "load":
+                console.debug("Loading...");
+                printConsoleResult(Database.load());
+                break;
+            case "unload":
+                console.debug("Unloading...");
+                printConsoleResult(Database.unload());
+                break;
             default:
                 console.debug("Unknown command");
+        }
+    }
+    private static void printConsoleResult(boolean state){
+        if(state){
+            console.info("Success");
+        }else{
+            console.error("Failure");
         }
     }
 }
