@@ -18,11 +18,19 @@ public class Commands {
                 break;
             case "reload":
                 console.debug("Reloading...");
-                printConsoleResult(Database.reload());
+                if(command.length<2){
+                    console.error("Incorrect data path specified");
+                }else{
+                    printConsoleResult(Database.reload(command[1]));
+                }
                 break;
             case "load":
                 console.debug("Loading...");
-                printConsoleResult(Database.load());
+                if(command.length<2){
+                    console.error("Incorrect data path specified");
+                }else{
+                    printConsoleResult(Database.load(command[1]));
+                }
                 break;
             case "unload":
                 console.debug("Unloading...");

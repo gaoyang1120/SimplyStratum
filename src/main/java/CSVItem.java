@@ -3,7 +3,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class CSVItem {
+public class CSVItem implements Comparable {
     private Date date;
     private double open;
     private double close;
@@ -85,5 +85,9 @@ public class CSVItem {
                 ", high=" + high +
                 ", low=" + low +
                 '}';
+    }
+    public int compareTo(Object anotherItem){
+        CSVItem item = (CSVItem) anotherItem;
+        return this.date.compareTo(item.getDate());
     }
 }
