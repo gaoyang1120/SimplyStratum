@@ -6,6 +6,9 @@ SimplyStratum is a light version of Stratum project. No UI, no servers, no handl
 2) Use console help: `help`
 3) Load demo-data: `load ./data/`
 
+## Common problems
+- Do not leave empty lines in data' files. It will load, by can cause unhandled exceptions. This files should be clean! Currently I can't add checking for simple lines when memory allocating.
+
 ## CSV files? What the?
 Visit [Finam](https://www.finam.ru/profile/forex/eur-usd/export/) to download required data or export from Metatrader. Required structure:
 | Date 	| Time 	| Open 	| High 	| Low 	| Close 	| Other Stuff   |

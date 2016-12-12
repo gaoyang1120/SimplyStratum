@@ -1,9 +1,9 @@
 package com.ileonidze.stratumIndicators;
 
-import com.ileonidze.startumCore.DatabaseItem;
+import com.ileonidze.stratumCore.DatabaseItem;
 
 public class RSI extends Indicator {
-    static double proceed(DatabaseItem item){
+    static double proceed(int index, DatabaseItem item){
         return item.getValue();
     }
 }

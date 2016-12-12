@@ -1,4 +1,4 @@
-import com.ileonidze.startumCore.Commands;
+import com.ileonidze.stratumCore.Commands;
 import org.apache.log4j.Logger;
 
 import java.util.Scanner;
