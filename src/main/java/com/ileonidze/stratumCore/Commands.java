@@ -19,6 +19,8 @@ public class Commands {
                 +"\nsetSortable"
                 +"\ngetSize"
                 +"\ngetItem"
+                +"\nsearch"
+                +"\ntest"
                 +"");
                 break;
             case "reload":
@@ -56,8 +58,27 @@ public class Commands {
                     console.info(queryResult == null ? "Not found" : queryResult);
                 }
                 break;
+            case "getIndicator":
+                if(command.length<3){
+                    console.error("Index or indicator's name is not specified");
+                }else{
+                    DatabaseItem queryResult = Database.getItem(new SearchConditions().setIndex(Integer.parseInt(command[1])));
+                    if(queryResult == null){
+                        console.info("Record not found");
+                        break;
+                    }
+                    Double indicatorValue = queryResult.getIndicators().get(command[2]);
+                    console.info(indicatorValue == null ? "Indicator not found" : indicatorValue);
+                }
+                break;
             case "getSize":
                 console.info(Database.getSize());
+                break;
+            case "search":
+                console.warn("Not implemented");
+                break;
+            case "test":
+                console.warn("Not implemented");
                 break;
             default:
                 console.debug("Unknown command");

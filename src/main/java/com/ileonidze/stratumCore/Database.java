@@ -45,7 +45,7 @@ public class Database {
                     BufferedReader br = new BufferedReader(new FileReader(fileEntry));
                     for(String lineString; (lineString = br.readLine()) != null; ) {
                         totalItems++;
-                        DatabaseItem item = convertCSVStringToDatabaseItem(lineString);
+                        DatabaseItem item = convertCSVStringToDatabaseItem(lineString,pushedItems+1);
                         if(item != null){
                             pushedItems++;
                             data[pushedItems-1] = item;
@@ -64,10 +64,10 @@ public class Database {
         console.debug("Totally pushed "+pushedItems+" items from "+totalItems+" (over "+Math.floor(pushedItems/totalItems*1000)/10+"%) for "+proceedingTimeDifference+"ms");
         return true;
     }
-    static private DatabaseItem convertCSVStringToDatabaseItem(String string){
+    static private DatabaseItem convertCSVStringToDatabaseItem(String string, int index){
         CSVItem convertedItem = new CSVItem(string);
         if(convertedItem.getDate()==null) return null;
-        return new DatabaseItem(convertedItem);
+        return new DatabaseItem(convertedItem, index);
     }
     public static boolean unload(){
         data = null;
@@ -92,7 +92,7 @@ public class Database {
     }
     public static DatabaseItem getItem(SearchConditions conditions){
         if(conditions.getIndex()!=null){
-            console.debug("Searching via index, recognized as "+(data.length+conditions.getIndex()-1));
+            //console.debug("Searching via index, recognized as "+(data.length+conditions.getIndex()-1));
             if(data==null) {
                 console.warn("Database is empty!");
                 return null;
