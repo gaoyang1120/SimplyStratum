@@ -8,8 +8,8 @@ public class Main {
     public static void main(String[] args) {
         console.debug("");
         console.debug("SimplyStratum is running as new instance");
-        while(sc.hasNext()) {
-            String s1 = sc.next();
+        while(sc.hasNextLine()) {
+            String s1 = sc.nextLine();
             console.trace(">>>: "+s1);
             if(s1.equals("exit")||s1.equals("shutdown")) {
                 shutdown();

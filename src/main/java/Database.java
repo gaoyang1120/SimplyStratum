@@ -1,9 +1,6 @@
 import org.apache.log4j.Logger;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.Date;
 
 public class Database {
@@ -21,7 +18,22 @@ public class Database {
         if(directoryList==null || directoryList.length == 0){
             return false;
         }
+        int totalLines = 0;
         console.trace("Constructing database from "+directoryList.length+" files");
+        for (final File fileEntry : directoryList) {
+            if (!fileEntry.isDirectory()) {
+                console.debug("Checking database file "+fileEntry.getPath());
+                try{
+                    LineNumberReader lnr = new LineNumberReader(new FileReader(new File(fileEntry.getPath())));
+                    lnr.skip(Long.MAX_VALUE);
+                    totalLines += lnr.getLineNumber() + 1;
+                    lnr.close();
+                }catch(Exception e){
+                    console.error("Something went wrong for file "+fileEntry.getPath());
+                }
+            }
+        }
+        data = new DatabaseItem[totalLines];
         for (final File fileEntry : directoryList) {
             if (!fileEntry.isDirectory()) {
                 console.debug("Loading database file "+fileEntry.getPath());
