@@ -1,7 +1,9 @@
+package com.ileonidze.startumCore;
+
 import org.apache.log4j.Logger;
 
 public class Commands {
-    private final static Logger console = Logger.getLogger(Main.class);
+    private final static Logger console = Logger.getLogger(Commands.class);
     public static void parse(String[] command){
         switch (command[0]){
             case "whoami":

@@ -1,3 +1,5 @@
+package com.ileonidze.startumCore;
+
 import org.apache.log4j.Logger;
 
 import java.io.*;
@@ -5,10 +7,11 @@ import java.util.Arrays;
 import java.util.Date;
 
 public class Database {
-    private final static Logger console = Logger.getLogger(Main.class);
+    private final static Logger console = Logger.getLogger(Database.class);
     private static DatabaseItem[] data = null;
-    private static boolean sortable = true;
+    private static boolean sortable = false;
 
+    /* LOADING MANIPULATIONS */
     public static boolean load(String dirPath){
         if(data != null) return false;
         long startTime = new Date().getTime();
@@ -78,4 +81,7 @@ public class Database {
         sortable = (setString.equals("1")||setString.equals("+")||setString.equals("true")||setString.equals("yes"));
         return true;
     }
+
+    /* DATA PROCEEDING MANIPULATIONS */
+
 }

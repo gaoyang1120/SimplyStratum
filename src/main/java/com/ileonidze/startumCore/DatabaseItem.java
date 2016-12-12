@@ -1,3 +1,5 @@
+package com.ileonidze.startumCore;
+
 import java.util.Date;
 
 public class DatabaseItem implements Comparable {
