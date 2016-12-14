@@ -3,7 +3,7 @@ package com.ileonidze.stratumCore;
 import java.util.Date;
 
 public class DatabaseItem implements Comparable {
-    private double price;
+    private Float price;
     private Date date;
 
     public DatabaseItem(CSVItem item, int index){
@@ -14,7 +14,12 @@ public class DatabaseItem implements Comparable {
         DatabaseItem item = (DatabaseItem) anotherItem;
         return this.date.compareTo(item.getDate());
     }
-    public double getPrice() {
+
+    public int getTimestamp(){
+        return (int) Math.floor(date.getTime()/1000);
+    }
+
+    public Float getPrice() {
         return price;
     }
     public Date getDate() {
@@ -33,7 +38,6 @@ public class DatabaseItem implements Comparable {
         DatabaseItem that = (DatabaseItem) o;
 
         return date.equals(that.date);
-
     }
     @Override
     public int hashCode() {

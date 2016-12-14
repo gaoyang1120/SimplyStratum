@@ -7,9 +7,9 @@ public class IndicatorsCollection {
     static {
         collection.put("RSI",new RSI());
     }
-    public static HashMap<String,Indicator> getCollection() {
+    /*public static HashMap<String,Indicator> getCollection() {
         return collection;
-    }
+    }*/
     public static Indicator getIndicator(String key) {
         return collection.get(key);
     }

@@ -74,7 +74,7 @@ public class Commands {
                         console.info("Indicator not found");
                         break;
                     }
-                    Double indicatorValue = indicator.proceed(Integer.parseInt(command[1]),Integer.parseInt(command[2]),Integer.parseInt(command[3]),queryResult);
+                    Float indicatorValue = indicator.proceed(Integer.parseInt(command[1]),Integer.parseInt(command[2]),Integer.parseInt(command[3]),queryResult);
                     console.info(indicatorValue);
                 }
                 break;
