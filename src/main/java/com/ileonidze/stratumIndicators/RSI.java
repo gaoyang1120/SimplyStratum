@@ -14,7 +14,8 @@ class RSI extends Indicator {
             return cachedValue;
         }
         // TODO: проверки на нормальность
-        Float rsi = 100-(100/(1+(new RS().proceed(index, timeFrame, period, item))));
+        Float rs = new RS().proceed(index, timeFrame, period, item);
+        Float rsi = 100-(100/(1+(rs)));
         cache.put(queryKey,rsi);
         return rsi;
     }
