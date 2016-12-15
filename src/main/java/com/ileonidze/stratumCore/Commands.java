@@ -4,6 +4,7 @@ import com.ileonidze.stratumIndicators.Indicator;
 import com.ileonidze.stratumIndicators.IndicatorsCollection;
 import org.apache.log4j.Logger;
 
+import java.util.Date;
 import java.util.List;
 
 public class Commands {
@@ -82,26 +83,39 @@ public class Commands {
                 break;
             case "indicatorSimilarities":
                 if(command.length<5){
-                    console.error("Indicator's name, timeFrame, period, deviation or dataSet are not specified");
+                    console.error("Indicator's name, timeFrame, period, deviation, futureDistance or dataSet are not specified");
                 }else{
-                    String[] preDataSet = command[5].split(",");
+                    Date startDate = new Date();
+                    String[] preDataSet = command[6].split(",");
                     Float[] dataSet = new Float[preDataSet.length];
                     for(int i=0;i<preDataSet.length;i++){
                         dataSet[i] = Float.parseFloat(preDataSet[i]);
                     }
                     String dataSetBuffer = "Dataset =";
-                    for(int i = 0;i<dataSet.length;i++){
-                        dataSetBuffer += " "+dataSet[i];
+                    for (Float aDataSet : dataSet) {
+                        dataSetBuffer += " " + aDataSet;
                     }
                     console.debug(dataSetBuffer);
-                    List<Float[]> result = Database.findIndicatorSimilarities(new SearchConditions().setIndicator(command[1]).setTimeFrame(Integer.parseInt(command[2])).setPeriod(Integer.parseInt(command[3])).setDeviation(Float.parseFloat(command[4])).setInputData(dataSet));
+                    List<Float[]> result = Database.findIndicatorSimilarities(new SearchConditions().setIndicator(command[1]).setTimeFrame(Integer.parseInt(command[2])).setPeriod(Integer.parseInt(command[3])).setDeviation(Float.parseFloat(command[4])).setFutureDistance(Integer.parseInt(command[5])).setInputData(dataSet).setStrictMovements(false));
                     if(result==null){
                         console.warn("Seems to be some problems occurred");
                     }else{
-                        console.info("Found "+result.size()+" similarities");
-
+                        String totBuffer = "Found "+result.size()+" similarities";
+                        for(int i=0;i<result.size();i++){
+                            //String buffer = "\n["+i+"]";
+                            String buffer = "\n";
+                            for(int i2 = 0;i2<result.get(i).length;i2++){
+                                if(i2==dataSet.length) buffer += "  |  ";
+                                buffer += " "+result.get(i)[i2];
+                                if(i2==result.get(i).length-1){
+                                    buffer += "        | "+(result.get(i)[i2]>result.get(i)[dataSet.length-1] ? "UP" : "DOWN");
+                                }
+                            }
+                            totBuffer += buffer;
+                        }
+                        console.info(totBuffer);
                     }
-                    console.info("Done");
+                    console.info("Done for "+(new Date().getTime()-startDate.getTime())+"ms");
                 }
                 break;
             case "getSize":

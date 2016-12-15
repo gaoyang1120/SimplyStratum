@@ -124,24 +124,31 @@ public class Database {
             console.error("Indicator is not found");
             return null;
         }
-        // // FIXME: 15.12.2016 deathPointer can produce nullpointerexception
+        // // FIXME: 15.12.2016 deathPointer can produce nullPointerException
+        // // FIXME: 15.12.2016 strictMovement seems to work incorrect
         List<Float[]> results = new ArrayList<>();
         for(int i=0;i<(conditions.getDeathPointer()==null ? (data.length-conditions.getInputData().length) : (conditions.getDeathPointer()>-1 ? conditions.getDeathPointer() : data.length-conditions.getDeathPointer()));i++){
             Float[] successCase = new Float[conditions.getInputData().length+conditions.getFutureDistance()];
             for(int i2=0;i2<conditions.getInputData().length;i2++){
                 Float databaseItem = indicator.proceed(i+i2,conditions.getTimeFrame(),conditions.getPeriod(),data[i+i2],null);
-                boolean similar = databaseItem<conditions.getInputData()[i2]+conditions.getDeviation()&&databaseItem>conditions.getInputData()[i2]-conditions.getDeviation();
-                //console.debug(databaseItem);
-                if(!similar){
-                    i2 = conditions.getInputData().length+1;
-                }else{
+                Float databaseItemChange = 0f;
+                Float inputItemChange = 0f;
+                if(conditions.isStrictMovements()&&i2>0){
+                    databaseItemChange = databaseItem-indicator.proceed(i+i2-1,conditions.getTimeFrame(),conditions.getPeriod(),data[i+i2-1],null);
+                    inputItemChange = conditions.getInputData()[i2]-conditions.getInputData()[i2-1];
+                }
+                if(databaseItem<conditions.getInputData()[i2]+conditions.getDeviation()&&databaseItem>conditions.getInputData()[i2]-conditions.getDeviation() && (
+                    (conditions.isStrictMovements()&&i2>0&&((databaseItemChange>0&&inputItemChange>0)||(databaseItemChange<0&&inputItemChange<0)))||(!conditions.isStrictMovements())
+                 )){
                     successCase[i2] = databaseItem;
                     if(i2==conditions.getInputData().length-1){
-                        for(int i3=1;i3<conditions.getFutureDistance();i3++){
+                        for(int i3=1;i3<conditions.getFutureDistance()+1;i3++){
                             successCase[i2+i3] = indicator.proceed(i+i2+i3,conditions.getTimeFrame(),conditions.getPeriod(),data[i+i2+i3],null);
                         }
                         results.add(successCase);
                     }
+                }else {
+                    i2 = conditions.getInputData().length + 1;
                 }
             }
         }
@@ -158,7 +165,7 @@ public class Database {
             return null;
         }
 
-        // // FIXME: 15.12.2016 deathPointer can produce nullpointerexception
+        // // FIXME: 15.12.2016 deathPointer can produce nullNointerException
         // for test purposes make demo-search on first indicator
         DatabaseItem[][] results = null;
         for(int i=conditions.getPeriod();i<(conditions.getDeathPointer()==null ? (data.length-conditions.getInputData().length) : (conditions.getDeathPointer()>-1 ? conditions.getDeathPointer() : data.length-conditions.getDeathPointer()));i++){

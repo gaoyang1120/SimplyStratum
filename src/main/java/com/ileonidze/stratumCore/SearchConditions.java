@@ -10,6 +10,7 @@ public class SearchConditions {
     private Integer period = null;
     private Float deviation = 0f;
     private Integer futureDistance = 1;
+    private boolean strictMovements = false;
 
     public Integer getIndex() {
         return index;
@@ -85,6 +86,15 @@ public class SearchConditions {
 
     public SearchConditions setFutureDistance(Integer futureDistance) {
         this.futureDistance = futureDistance;
+        return this;
+    }
+
+    public boolean isStrictMovements() {
+        return strictMovements;
+    }
+
+    public SearchConditions setStrictMovements(boolean strictMovements) {
+        this.strictMovements = strictMovements;
         return this;
     }
 }
