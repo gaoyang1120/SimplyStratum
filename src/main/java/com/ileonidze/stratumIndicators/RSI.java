@@ -12,7 +12,7 @@ class RSI extends Indicator {
         if(cachedValue!=null){
             return cachedValue;
         }
-        Float rs = new RS().proceed(index, timeFrame, period, item);
+        Float rs = IndicatorsCollection.getIndicator("RS").proceed(index, timeFrame, period, item);
         Float rsi = 100-(100/(1+(rs)));
         cache.put(queryKey,rsi);
         return rsi;
