@@ -7,7 +7,7 @@ public class SearchConditions {
     private String indicator = null;
     private Float[] inputData = null;
     private Integer deathPointer = null;
-    private Integer period = null;
+    private Integer period = 21;
     private Float deviation = 0f;
     private Integer futureDistance = 1;
     private boolean strictMovements = false;
