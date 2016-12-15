@@ -1,10 +1,15 @@
 package com.ileonidze.stratumCore;
 
+import com.ileonidze.stratumIndicators.Indicator;
+import com.ileonidze.stratumIndicators.IndicatorsCollection;
 import org.apache.log4j.Logger;
 
+import javax.xml.crypto.Data;
 import java.io.*;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 public class Database {
     private final static Logger console = Logger.getLogger(Database.class);
@@ -12,7 +17,7 @@ public class Database {
     private static boolean sortable = false;
 
     /* LOADING MANIPULATIONS */
-    public static boolean load(String dirPath){
+    static boolean load(String dirPath){
         if(data != null) return false;
         long startTime = new Date().getTime();
         int pushedItems = 0;
@@ -69,21 +74,21 @@ public class Database {
         if(convertedItem.getDate()==null) return null;
         return new DatabaseItem(convertedItem, index);
     }
-    public static boolean unload(){
+    static boolean unload(){
         data = null;
         return true;
     }
-    public static boolean reload(String dirPath){
+    static boolean reload(String dirPath){
         return unload() && load(dirPath);
     }
-    public static boolean setSortable(String setString){
+    static boolean setSortable(String setString){
         if(!setString.equals("1")&&!setString.equals("0")&&!setString.equals("true")&&!setString.equals("false")&&!setString.equals("+")&&!setString.equals("-")&&!setString.equals("yes")&&!setString.equals("no")) return false;
         sortable = (setString.equals("1")||setString.equals("+")||setString.equals("true")||setString.equals("yes"));
         return true;
     }
 
     /* DATA PROCEEDING MANIPULATIONS */
-    public static int getSize(){
+    static int getSize(){
         if(data==null){
             console.warn("Database is empty");
             return 0;
@@ -103,6 +108,75 @@ public class Database {
                 return data[realIndex<0 ? (data.length+realIndex) : realIndex];
             }
         }
+        return null;
+    }
+    static List<Float[]> findIndicatorSimilarities(SearchConditions conditions){
+        if(conditions.getIndicator()==null){
+            console.error("No indicator specified");
+            return null;
+        }
+        if(conditions.getInputData()==null||conditions.getInputData().length<1){
+            console.error("No input data specified");
+            return null;
+        }
+        Indicator indicator = IndicatorsCollection.getIndicator(conditions.getIndicator());
+        if(indicator==null){
+            console.error("Indicator is not found");
+            return null;
+        }
+        // // FIXME: 15.12.2016 deathPointer can produce nullpointerexception
+        List<Float[]> results = new ArrayList<>();
+        for(int i=0;i<(conditions.getDeathPointer()==null ? (data.length-conditions.getInputData().length) : (conditions.getDeathPointer()>-1 ? conditions.getDeathPointer() : data.length-conditions.getDeathPointer()));i++){
+            Float[] successCase = new Float[conditions.getInputData().length+conditions.getFutureDistance()];
+            for(int i2=0;i2<conditions.getInputData().length;i2++){
+                Float databaseItem = indicator.proceed(i+i2,conditions.getTimeFrame(),conditions.getPeriod(),data[i+i2],null);
+                boolean similar = databaseItem<conditions.getInputData()[i2]+conditions.getDeviation()&&databaseItem>conditions.getInputData()[i2]-conditions.getDeviation();
+                //console.debug(databaseItem);
+                if(!similar){
+                    i2 = conditions.getInputData().length+1;
+                }else{
+                    successCase[i2] = databaseItem;
+                    if(i2==conditions.getInputData().length-1){
+                        for(int i3=1;i3<conditions.getFutureDistance();i3++){
+                            successCase[i2+i3] = indicator.proceed(i+i2+i3,conditions.getTimeFrame(),conditions.getPeriod(),data[i+i2+i3],null);
+                        }
+                        results.add(successCase);
+                    }
+                }
+            }
+        }
+        return results;
+    }
+    public static DatabaseItem[][] findSimilarities(SearchConditions conditions){
+        console.debug("findSimilarities is here");
+        if(conditions.getIndicators()==null||conditions.getIndicators().length<1){
+            console.error("No indicators specified");
+            return null;
+        }
+        if(conditions.getInputData()==null||conditions.getInputData().length<1){
+            console.error("No input data specified");
+            return null;
+        }
+
+        // // FIXME: 15.12.2016 deathPointer can produce nullpointerexception
+        // for test purposes make demo-search on first indicator
+        DatabaseItem[][] results = null;
+        for(int i=conditions.getPeriod();i<(conditions.getDeathPointer()==null ? (data.length-conditions.getInputData().length) : (conditions.getDeathPointer()>-1 ? conditions.getDeathPointer() : data.length-conditions.getDeathPointer()));i++){
+            for(int i2=conditions.getPeriod();i2<conditions.getInputData().length;i2++){
+
+            }
+        }
+
+
+        /*
+        if(results==null){
+            // if results null, then make first raw prediction
+        }else{
+            // if results is not null, then make predictions, based on
+
+        }
+        */
+
         return null;
     }
 }

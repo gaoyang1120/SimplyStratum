@@ -4,6 +4,8 @@ import com.ileonidze.stratumIndicators.Indicator;
 import com.ileonidze.stratumIndicators.IndicatorsCollection;
 import org.apache.log4j.Logger;
 
+import java.util.List;
+
 public class Commands {
     private final static Logger console = Logger.getLogger(Commands.class);
     public static void parse(String[] command){
@@ -74,8 +76,32 @@ public class Commands {
                         console.info("Indicator not found");
                         break;
                     }
-                    Float indicatorValue = indicator.proceed(Integer.parseInt(command[1]),Integer.parseInt(command[2]),Integer.parseInt(command[3]),queryResult);
+                    Float indicatorValue = indicator.proceed(Integer.parseInt(command[1]),Integer.parseInt(command[2]),Integer.parseInt(command[3]),queryResult,null);
                     console.info(indicatorValue);
+                }
+                break;
+            case "indicatorSimilarities":
+                if(command.length<5){
+                    console.error("Indicator's name, timeFrame, period, deviation or dataSet are not specified");
+                }else{
+                    String[] preDataSet = command[5].split(",");
+                    Float[] dataSet = new Float[preDataSet.length];
+                    for(int i=0;i<preDataSet.length;i++){
+                        dataSet[i] = Float.parseFloat(preDataSet[i]);
+                    }
+                    String dataSetBuffer = "Dataset =";
+                    for(int i = 0;i<dataSet.length;i++){
+                        dataSetBuffer += " "+dataSet[i];
+                    }
+                    console.debug(dataSetBuffer);
+                    List<Float[]> result = Database.findIndicatorSimilarities(new SearchConditions().setIndicator(command[1]).setTimeFrame(Integer.parseInt(command[2])).setPeriod(Integer.parseInt(command[3])).setDeviation(Float.parseFloat(command[4])).setInputData(dataSet));
+                    if(result==null){
+                        console.warn("Seems to be some problems occurred");
+                    }else{
+                        console.info("Found "+result.size()+" similarities");
+
+                    }
+                    console.info("Done");
                 }
                 break;
             case "getSize":

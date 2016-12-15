@@ -6,13 +6,13 @@ import java.util.HashMap;
 
 class RSI extends Indicator {
     private HashMap<String,Float> cache = new HashMap<>();
-    public final Float proceed(int index, int timeFrame, int period, DatabaseItem item){
+    public final Float proceed(int index, int timeFrame, int period, DatabaseItem item, DatabaseItem[] additionalSource){
         String queryKey = item.getTimestamp()+"_"+timeFrame+"_"+period;
         Float cachedValue = cache.get(queryKey);
         if(cachedValue!=null){
             return cachedValue;
         }
-        Float rs = IndicatorsCollection.getIndicator("RS").proceed(index, timeFrame, period, item);
+        Float rs = IndicatorsCollection.getIndicator("RS").proceed(index, timeFrame, period, item, additionalSource);
         Float rsi = 100-(100/(1+(rs)));
         cache.put(queryKey,rsi);
         return rsi;

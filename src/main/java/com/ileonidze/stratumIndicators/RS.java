@@ -5,7 +5,7 @@ import com.ileonidze.stratumCore.DatabaseItem;
 import com.ileonidze.stratumCore.SearchConditions;
 
 class RS extends Indicator {
-    public final Float proceed(int index, int timeFrame, int period, DatabaseItem item){
+    public final Float proceed(int index, int timeFrame, int period, DatabaseItem item, DatabaseItem[] additionalSource){
         Float up = 0f;
         Float down = 0f;
         for(int i=0;i<period;i++){
