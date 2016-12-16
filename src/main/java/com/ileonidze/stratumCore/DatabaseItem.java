@@ -3,13 +3,19 @@ package com.ileonidze.stratumCore;
 import java.util.Date;
 
 public class DatabaseItem implements Comparable {
-    private Float price;
+    private float value;
     private Date date;
 
     public DatabaseItem(CSVItem item, int index){
         this.date = item.getDate();
-        this.price = item.getClose();
+        this.value = item.getClose();
     }
+
+    public DatabaseItem(float price, Date date) {
+        this.value = price;
+        this.date = date;
+    }
+
     public int compareTo(Object anotherItem){
         DatabaseItem item = (DatabaseItem) anotherItem;
         return this.date.compareTo(item.getDate());
@@ -19,15 +25,15 @@ public class DatabaseItem implements Comparable {
         return (int) Math.floor(date.getTime()/1000);
     }
 
-    public Float getPrice() {
-        return price;
+    public float getValue() {
+        return value;
     }
     public Date getDate() {
         return date;
     }
     @Override
     public String toString() {
-        return "["+date+" ("+date.getTime()/1000+"):"+ price +"]";
+        return "["+date+" ("+date.getTime()/1000+"):"+ value +"]";
     }
 
     @Override

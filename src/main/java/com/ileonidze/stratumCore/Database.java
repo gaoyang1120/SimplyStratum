@@ -4,7 +4,6 @@ import com.ileonidze.stratumIndicators.Indicator;
 import com.ileonidze.stratumIndicators.IndicatorsCollection;
 import org.apache.log4j.Logger;
 
-import javax.xml.crypto.Data;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -110,7 +109,7 @@ public class Database {
         }
         return null;
     }
-    static List<Float[]> findIndicatorSimilarities(SearchConditions conditions){
+    public static List<DatabaseItem[]> findIndicatorSimilarities(SearchConditions conditions){
         if(conditions.getIndicator()==null){
             console.error("No indicator specified");
             return null;
@@ -126,18 +125,18 @@ public class Database {
         }
         // // FIXME: 15.12.2016 deathPointer can produce nullPointerException
         // // FIXME: 15.12.2016 strictMovement seems to work incorrect
-        List<Float[]> results = new ArrayList<>();
+        List<DatabaseItem[]> results = new ArrayList<>();
         for(int i=0;i<(conditions.getDeathPointer()==null ? (data.length-conditions.getInputData().length) : (conditions.getDeathPointer()>-1 ? conditions.getDeathPointer() : data.length-conditions.getDeathPointer()));i++){
-            Float[] successCase = new Float[conditions.getInputData().length+conditions.getFutureDistance()];
+            DatabaseItem[] successCase = new DatabaseItem[conditions.getInputData().length+conditions.getFutureDistance()];
             for(int i2=0;i2<conditions.getInputData().length;i2++){
-                Float databaseItem = indicator.proceed(i+i2,conditions.getTimeFrame(),conditions.getPeriod(),data[i+i2],null);
-                Float databaseItemChange = 0f;
-                Float inputItemChange = 0f;
+                DatabaseItem databaseItem = indicator.proceed(i+i2,conditions.getTimeFrame(),conditions.getPeriod(),data[i+i2],null);
+                float databaseItemChange = 0f;
+                float inputItemChange = 0f;
                 if(conditions.isStrictMovements()&&i2>0){
-                    databaseItemChange = databaseItem-indicator.proceed(i+i2-1,conditions.getTimeFrame(),conditions.getPeriod(),data[i+i2-1],null);
+                    databaseItemChange = databaseItem.getValue()-indicator.proceed(i+i2-1,conditions.getTimeFrame(),conditions.getPeriod(),data[i+i2-1],null).getValue();
                     inputItemChange = conditions.getInputData()[i2]-conditions.getInputData()[i2-1];
                 }
-                if(databaseItem<conditions.getInputData()[i2]+conditions.getDeviation()&&databaseItem>conditions.getInputData()[i2]-conditions.getDeviation() && (
+                if(databaseItem.getValue()<conditions.getInputData()[i2]+conditions.getDeviation()&&databaseItem.getValue()>conditions.getInputData()[i2]-conditions.getDeviation() && (
                     (conditions.isStrictMovements()&&i2>0&&((databaseItemChange>0&&inputItemChange>0)||(databaseItemChange<0&&inputItemChange<0)))||(!conditions.isStrictMovements())
                  )){
                     successCase[i2] = databaseItem;

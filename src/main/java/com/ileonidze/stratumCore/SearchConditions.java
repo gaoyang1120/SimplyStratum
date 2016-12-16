@@ -2,28 +2,28 @@ package com.ileonidze.stratumCore;
 
 public class SearchConditions {
     private Integer index = null;
-    private Integer timeFrame = 1;
+    private int timeFrame = 1;
     private String[] indicators = null;
     private String indicator = null;
-    private Float[] inputData = null;
+    private float[] inputData = null;
     private Integer deathPointer = null;
-    private Integer period = 21;
-    private Float deviation = 0f;
-    private Integer futureDistance = 1;
+    private int period = 21;
+    private float deviation = 0f;
+    private int futureDistance = 1;
     private boolean strictMovements = false;
 
     public Integer getIndex() {
         return index;
     }
 
-    public Integer getTimeFrame() {
+    public int getTimeFrame() {
         return timeFrame;
     }
-    public SearchConditions setTimeFrame(Integer timeFrame) {
+    public SearchConditions setTimeFrame(int timeFrame) {
         this.timeFrame = timeFrame;
         return this;
     }
-    public SearchConditions setIndex(Integer index) {
+    public SearchConditions setIndex(int index) {
         this.index = index;
         return this;
     }
@@ -35,11 +35,11 @@ public class SearchConditions {
         return this;
     }
 
-    public Float[] getInputData() {
+    public float[] getInputData() {
         return inputData;
     }
 
-    public SearchConditions setInputData(Float[] inputData) {
+    public SearchConditions setInputData(float[] inputData) {
         this.inputData = inputData;
         return this;
     }
@@ -48,16 +48,16 @@ public class SearchConditions {
         return deathPointer;
     }
 
-    public SearchConditions setDeathPointer(Integer deathPointer) {
+    public SearchConditions setDeathPointer(int deathPointer) {
         this.deathPointer = deathPointer;
         return this;
     }
 
-    public Integer getPeriod() {
+    public int getPeriod() {
         return period;
     }
 
-    public SearchConditions setPeriod(Integer period) {
+    public SearchConditions setPeriod(int period) {
         this.period = period;
         return this;
     }
@@ -71,20 +71,20 @@ public class SearchConditions {
         return this;
     }
 
-    public Float getDeviation() {
+    public float getDeviation() {
         return deviation;
     }
 
-    public SearchConditions setDeviation(Float deviation) {
+    public SearchConditions setDeviation(float deviation) {
         this.deviation = deviation;
         return this;
     }
 
-    public Integer getFutureDistance() {
+    public int getFutureDistance() {
         return futureDistance;
     }
 
-    public SearchConditions setFutureDistance(Integer futureDistance) {
+    public SearchConditions setFutureDistance(int futureDistance) {
         this.futureDistance = futureDistance;
         return this;
     }

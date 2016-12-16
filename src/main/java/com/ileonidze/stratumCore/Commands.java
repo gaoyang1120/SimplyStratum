@@ -2,6 +2,9 @@ package com.ileonidze.stratumCore;
 
 import com.ileonidze.stratumIndicators.Indicator;
 import com.ileonidze.stratumIndicators.IndicatorsCollection;
+import com.ileonidze.stratumMagic.Magic;
+import com.ileonidze.stratumMagic.MagicRequest;
+import com.ileonidze.stratumMagic.MagicResponse;
 import org.apache.log4j.Logger;
 
 import java.util.Date;
@@ -77,8 +80,25 @@ public class Commands {
                         console.info("Indicator not found");
                         break;
                     }
-                    Float indicatorValue = indicator.proceed(Integer.parseInt(command[1]),Integer.parseInt(command[2]),Integer.parseInt(command[3]),queryResult,null);
+                    float indicatorValue = indicator.proceed(Integer.parseInt(command[1]),Integer.parseInt(command[2]),Integer.parseInt(command[3]),queryResult,null).getValue();
                     console.info(indicatorValue);
+                }
+                break;
+            case "magic":
+                if(command.length<3){
+                    console.error("Period or dataSet are not specified");
+                }else{
+                    String[] requestDataStrings = command[2].split(",");
+                    DatabaseItem[] requestDataSet = new DatabaseItem[requestDataStrings.length];
+                    for(int i=0;i<requestDataStrings.length;i++){
+                        requestDataSet[i] = new DatabaseItem(Float.parseFloat(requestDataStrings[i]),new Date());
+                    }
+                    MagicResponse magic = new Magic().drop(new MagicRequest().setIndicatorsPeriod(Integer.parseInt(command[1])).setDataSet(requestDataSet));
+                    if(magic == null){
+                        console.warn("Unknown problem occurred");
+                        break;
+                    }
+                    console.info((magic.isAct() ? "ACT" : "WAIT")+", direction "+magic.getDirectionString()+", confidence "+Math.floor(magic.getProbability()*100)/100+"%");
                 }
                 break;
             case "indicatorSimilarities":
@@ -87,33 +107,55 @@ public class Commands {
                 }else{
                     Date startDate = new Date();
                     String[] preDataSet = command[6].split(",");
-                    Float[] dataSet = new Float[preDataSet.length];
+                    float[] dataSet = new float[preDataSet.length];
                     for(int i=0;i<preDataSet.length;i++){
                         dataSet[i] = Float.parseFloat(preDataSet[i]);
                     }
                     String dataSetBuffer = "Dataset =";
-                    for (Float aDataSet : dataSet) {
+                    for (float aDataSet : dataSet) {
                         dataSetBuffer += " " + aDataSet;
                     }
                     console.debug(dataSetBuffer);
-                    List<Float[]> result = Database.findIndicatorSimilarities(new SearchConditions().setIndicator(command[1]).setTimeFrame(Integer.parseInt(command[2])).setPeriod(Integer.parseInt(command[3])).setDeviation(Float.parseFloat(command[4])).setFutureDistance(Integer.parseInt(command[5])).setInputData(dataSet).setStrictMovements(false));
+                    List<DatabaseItem[]> result = Database.findIndicatorSimilarities(new SearchConditions().setIndicator(command[1]).setTimeFrame(Integer.parseInt(command[2])).setPeriod(Integer.parseInt(command[3])).setDeviation(Float.parseFloat(command[4])).setFutureDistance(Integer.parseInt(command[5])).setInputData(dataSet).setStrictMovements(false));
                     if(result==null){
                         console.warn("Seems to be some problems occurred");
                     }else{
                         String totBuffer = "Found "+result.size()+" similarities";
+                        float bulls = 0;
+                        float bears = 0;
+                        float tots = 0;
                         for(int i=0;i<result.size();i++){
-                            //String buffer = "\n["+i+"]";
-                            String buffer = "\n";
+                            tots++;
+                            String buffer = "\n["+i+" "+result.get(i)[0].getDate()+"]";
+                            //String buffer = "\n";
                             for(int i2 = 0;i2<result.get(i).length;i2++){
-                                if(i2==dataSet.length) buffer += "  |  ";
-                                buffer += " "+result.get(i)[i2];
+                                //if(i2==dataSet.length) buffer += "  |  ";
+                                //buffer += " "+result.get(i)[i2];
                                 if(i2==result.get(i).length-1){
-                                    buffer += "        | "+(result.get(i)[i2]>result.get(i)[dataSet.length-1] ? "UP" : "DOWN");
+                                    if(result.get(i)[i2].getValue()>result.get(i)[dataSet.length-1].getValue()){
+                                        bulls++;
+                                    }else if(result.get(i)[i2].getValue()<result.get(i)[dataSet.length-1].getValue()){
+                                        bears++;
+                                    }
+                                    buffer += "        | "+(result.get(i)[i2].getValue()>result.get(i)[dataSet.length-1].getValue() ? "UP" : "DOWN");
                                 }
                             }
                             totBuffer += buffer;
                         }
                         console.info(totBuffer);
+                        float bullsProbability = bulls/tots*100;
+                        float bearsProbability = bears/tots*100;
+                        //console.info("Bulls "+bulls+" ("+bullsProbability+"%), Bears "+bears+" ("+bearsProbability+"%) from "+tots);
+                        int direction = 0;
+                        float probability = 50;
+                        if(bullsProbability>bearsProbability){
+                            direction = 1;
+                            probability = bullsProbability;
+                        }else if(bearsProbability>bullsProbability){
+                            direction = -1;
+                            probability = bearsProbability;
+                        }
+                        console.info("Result: "+(direction > 0 ? "UP" : direction < 0 ? "DOWN" : "UNKNOWN")+" in "+Math.floor(probability)+"%, "+(probability > 76 ? "ACT" : "SKIP"));
                     }
                     console.info("Done for "+(new Date().getTime()-startDate.getTime())+"ms");
                 }

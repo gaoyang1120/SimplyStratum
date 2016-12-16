@@ -8,10 +8,10 @@ import java.util.List;
 public class Prediction {
     private Integer direction; //0;
     private Integer futureDistance; //0;
-    private List<Float[]> similarities;
-    private Float probability; //50f;
+    private List<float[]> similarities;
+    private float probability; //50f;
     private Indicator indicator;
-    private Float deviation; //0f;
+    private float deviation; //0f;
     private Integer timeFrame; //1;
     private Integer period; //21;
 
@@ -37,20 +37,20 @@ public class Prediction {
         return this;
     }
 
-    public List<Float[]> getSimilarities() {
+    public List<float[]> getSimilarities() {
         return similarities;
     }
 
-    public Prediction setSimilarities(List<Float[]> similarities) {
+    public Prediction setSimilarities(List<float[]> similarities) {
         this.similarities = similarities;
         return this;
     }
 
-    public Float getProbability() {
+    public float getProbability() {
         return probability;
     }
 
-    public Prediction setProbability(Float probability) {
+    public Prediction setProbability(float probability) {
         this.probability = probability;
         return this;
     }
@@ -64,11 +64,11 @@ public class Prediction {
         return this;
     }
 
-    public Float getDeviation() {
+    public float getDeviation() {
         return deviation;
     }
 
-    public Prediction setDeviation(Float deviation) {
+    public Prediction setDeviation(float deviation) {
         this.deviation = deviation;
         return this;
     }

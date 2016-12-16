@@ -6,12 +6,12 @@ import java.util.Date;
 
 public class CSVItem implements Comparable {
     private Date date;
-    private Float open;
-    private Float close;
-    private Float high;
-    private Float low;
+    private float open;
+    private float close;
+    private float high;
+    private float low;
 
-    public CSVItem(Date date, Float open, Float close, Float high, Float low) {
+    public CSVItem(Date date, float open, float close, float high, float low) {
         this.date = date;
         this.open = open;
         this.close = close;
@@ -46,19 +46,19 @@ public class CSVItem implements Comparable {
         return date;
     }
 
-    public Float getOpen() {
+    public float getOpen() {
         return open;
     }
 
-    public Float getClose() {
+    public float getClose() {
         return close;
     }
 
-    public Float getHigh() {
+    public float getHigh() {
         return high;
     }
 
-    public Float getLow() {
+    public float getLow() {
         return low;
     }
 
